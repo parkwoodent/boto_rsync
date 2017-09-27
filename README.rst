@@ -24,7 +24,7 @@ Installation
 
 To install, simply::
 
-    pip install boto_rsync
+    pip install https://github.com/parkwoodent/boto_rsync/archive/master.zip
 
 * You'll need to have `Python`_ 2.5+ and `pip`_ installed.
 * You might have to be root (or use sudo) for pip to install the script into a
