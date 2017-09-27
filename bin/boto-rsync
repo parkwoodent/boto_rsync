@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 # Copyright (c) 2012 Seth Davis http://www.curiasolutions.com/
 # s3put is Copyright (c) 2006,2007,2008 Mitch Garnaat http://garnaat.org/
 #
@@ -210,6 +210,12 @@ def main():
              '"host" connection argument (S3 only).'
         )
     parser.add_argument(
+        '-u', '--useragent',
+        help='A Custom User Agent ' + \
+             'for use in the Boto HTTPConnection. See https://github.com/boto/boto/issues/2299 ' + \
+             'for more info).'
+        )
+    parser.add_argument(
         '-g', '--grant',
         help='A canned ACL policy that will be granted on each file ' + \
              'transferred to S3/GS. The value provided must be one of the ' + \
@@ -305,8 +311,9 @@ def main():
     
     try:
         args = parser.parse_args()
-    except argparse.ArgumentTypeError:
-        pass
+    except:
+        sys.stdout.write('\n')
+        usage(parser)
     
     try:
         cloud_access_key_id = args.cloud_access_key_id
@@ -331,6 +338,7 @@ def main():
         debug = args.debug
         source = args.SOURCE
         dest = args.DESTINATION
+        useragent = args.useragent
     except:
         sys.stdout.write('\nERROR: Improperly formatted arguments.\n\n')
         usage(parser)
@@ -409,6 +417,10 @@ def main():
         cloud_dest_path = cloud_dest_path.lstrip('/')
     
     
+    print "SO, we have %s for useragent" % useragent
+    
+    boto.UserAgent = useragent
+
     # Connect to Cloud
     if cloud_service == 'gs':
         c = boto.connect_gs(gs_access_key_id=cloud_access_key_id,
